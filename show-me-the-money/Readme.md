@@ -6,7 +6,7 @@ Please read through the API documentation at https://developer.xero.com/document
 
 Use mock Xero Balance Sheet API docker image available at https://hub.docker.com/r/jaypeng2015/show-me-the-money.
 
-Server runs on http with port 3000 and the api path is `/api.xro/2.0/Reports/BalanceSheet` once you have it running.
+The Server runs on http with port 3000, and the api path is `/api.xro/2.0/Reports/BalanceSheet` once you have it running.
 
 The system should consist of the following:
 
