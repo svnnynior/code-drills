@@ -1,10 +1,19 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import React from "react";
 import { getBalanceSheetData } from "./server";
+import BalanceSheetTable from "@/_components/BalanceSheetTable";
 
+// TODO: Backend should change Reports to not be an array
 type BalanceSheetTableData = {
-  name: string;
-  stargazers_count: number;
+  Reports: {
+    ReportID: string;
+    ReportName: string;
+    ReportType: string;
+    ReportTitles: string[3];
+    ReportDate: string;
+    UpdatedDateUTC: string;
+    Rows: [];
+  }[];
 };
 
 export const getServerSideProps = (async () => {
@@ -17,8 +26,13 @@ export default function BalanceSheet({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   console.log(data);
   return (
-    <main>
-      <p>This should be the balance sheet page</p>
+    <main className="p-12">
+      <BalanceSheetTable
+        title={data.Reports[0].ReportTitles[0]}
+        orgName={data.Reports[0].ReportTitles[1]}
+        asOfDateString={data.Reports[0].ReportDate}
+        rows={data.Reports[0].Rows}
+      />
     </main>
   );
 }
