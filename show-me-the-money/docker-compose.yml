@@ -1,0 +1,6 @@
+services:
+  xero-api:
+    image: jaypeng2015/show-me-the-money:latest
+    container_name: xero-api
+    ports:
+      - 3000:3000
