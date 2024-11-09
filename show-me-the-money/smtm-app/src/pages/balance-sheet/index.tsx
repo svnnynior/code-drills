@@ -1,7 +1,7 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import React from "react";
 import { getBalanceSheetData } from "./server";
-import BalanceSheetTable from "@/_components/BalanceSheetTable";
+import BalanceSheetTable from "@/_components/balance-sheet/BalanceSheetTable";
 
 // TODO: Backend should change Reports to not be an array
 type BalanceSheetTableData = {

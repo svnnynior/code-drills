@@ -1,11 +1,11 @@
-enum BalanceSheetRowType {
+export enum BalanceSheetRowType {
   Header = "Header",
   Section = "Section",
   Row = "Row",
   SummaryRow = "SummaryRow",
 }
 
-type BalanceSheetRow =
+export type BalanceSheetRow =
   | BalanceSheetRowHeader
   | BalanceSheetRowSection
   | BalanceSheetRowData
@@ -19,7 +19,7 @@ type BalanceSheetRowHeader = {
 type BalanceSheetRowSection = {
   RowType: BalanceSheetRowType.Section;
   Title: string;
-  Rows: BalanceSheetRowData[];
+  Rows: (BalanceSheetRowData | BalanceSheetRowSummaryRow)[];
 };
 
 type BalanceSheetRowData = {
@@ -32,33 +32,12 @@ type BalanceSheetRowSummaryRow = {
   Cells: BalanceSheetCell[];
 };
 
-type BalanceSheetCell = {
+export type BalanceSheetCell = {
   Value: string;
   Attributes?: BalanceSheetCellAttribute[];
 };
 
-type BalanceSheetCellAttribute = {
+export type BalanceSheetCellAttribute = {
   Value: string;
   Id: string;
 };
-
-type BalanceSheetTableProps = {
-  title: string;
-  orgName: string;
-  asOfDateString: string;
-  rows: BalanceSheetRow[];
-};
-
-export default function BalanceSheetTable({
-  title,
-  orgName,
-  asOfDateString,
-}: BalanceSheetTableProps) {
-  return (
-    <div>
-      <h1 className="text-4xl font-bold">{title}</h1>
-      <h2 className="text-2xl">{orgName}</h2>
-      <p className="text-base">{asOfDateString}</p>
-    </div>
-  );
-}
