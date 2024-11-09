@@ -26,7 +26,7 @@ export default function BalanceSheetTable({
   );
   const maxColumnSpan = headers[0].Cells.length;
   return (
-    <Sheet className="p-4">
+    <Sheet className="p-2 md:p-4">
       <h1 className="text-4xl font-bold">{title}</h1>
       <h2 className="text-2xl">{orgName}</h2>
       <p className="text-base">As at {asOfDateString}</p>
