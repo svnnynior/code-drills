@@ -1,9 +1,10 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-import React from "react";
+import React, { useState } from "react";
 import { getBalanceSheetData } from "./server";
 import BalanceSheetTable from "@/_components/balance-sheet/BalanceSheetTable";
 import Link from "next/link";
 import { Option, Select } from "@mui/joy";
+import dayjs from "dayjs";
 
 // TODO: Backend should change Reports to not be an array
 export type BalanceSheetTableData = {
@@ -18,6 +19,12 @@ export type BalanceSheetTableData = {
   }[];
 };
 
+enum ReportTimeframe {
+  MONTH = "MONTH",
+  QUARTER = "QUARTER",
+  YEAR = "YEAR",
+}
+
 export const getServerSideProps = (async () => {
   const data = await getBalanceSheetData();
   return { props: { data } };
@@ -26,10 +33,43 @@ export const getServerSideProps = (async () => {
 export default function BalanceSheetPage({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(data);
   const title = data.Reports[0].ReportTitles[0];
   const orgName = data.Reports[0].ReportTitles[1];
   const asOfDateString = data.Reports[0].ReportDate;
+
+  const [reportDate, setReportDate] = useState<string>(
+    dayjs().format("YYYY-MM-DD")
+  );
+  const [reportTimeframe, setReportTimeframe] = useState<ReportTimeframe>(
+    ReportTimeframe.MONTH
+  );
+  const [reportNumPeriods, setReportNumPeriods] = useState<string>("1");
+
+  const handleReportDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("reportDate", e.target.value);
+    setReportDate(dayjs(e.target.value).format("YYYY-MM-DD"));
+  };
+
+  const handleReportTimeframeChange = (
+    _: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: ReportTimeframe | null
+  ) => {
+    console.log("reportTimeframe", value);
+    if (value) {
+      setReportTimeframe(value);
+    }
+  };
+
+  const handleReportNumPeriodsChange = (
+    _: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: string | null
+  ) => {
+    console.log("reportNumPeriods", value);
+    if (value) {
+      setReportNumPeriods(value);
+    }
+  };
+
   return (
     <main className="p-12">
       <div className="flex justify-start px-2 md:px-0 md:justify-end hover:underline">
@@ -42,11 +82,42 @@ export default function BalanceSheetPage({
       </div>
       <h1 className="text-4xl font-bold">{title}</h1>
       <h2 className="text-2xl">{orgName}</h2>
-      <div className="flex py-4">
-        <Select placeholder="Select a timeframe">
-          <Option value="month">MONTH</Option>
-          <Option value="quarter">QUARTER</Option>
-          <Option value="year">YEAR</Option>
+      <div className="flex flex-col md:flex-row py-4 gap-4">
+        <input
+          className="border-2 border-gray-800 rounded-md p-1"
+          type="date"
+          id="date"
+          name="date"
+          defaultValue={reportDate}
+          onChange={handleReportDateChange}
+        />
+        <Select
+          sx={{ minWidth: 200 }}
+          placeholder="Timeframe"
+          value={reportTimeframe}
+          onChange={handleReportTimeframeChange}
+        >
+          <Option value={ReportTimeframe.MONTH}>MONTH</Option>
+          <Option value={ReportTimeframe.QUARTER}>QUARTER</Option>
+          <Option value={ReportTimeframe.YEAR}>YEAR</Option>
+        </Select>
+        <Select
+          sx={{ minWidth: 200 }}
+          placeholder="Number of periods"
+          value={reportNumPeriods}
+          onChange={handleReportNumPeriodsChange}
+        >
+          <Option value="1">1</Option>
+          <Option value="2">2</Option>
+          <Option value="3">3</Option>
+          <Option value="4">4</Option>
+          <Option value="5">5</Option>
+          <Option value="6">6</Option>
+          <Option value="7">7</Option>
+          <Option value="8">8</Option>
+          <Option value="9">9</Option>
+          <Option value="10">10</Option>
+          <Option value="11">11</Option>
         </Select>
       </div>
       <div className="flex justify-end">
