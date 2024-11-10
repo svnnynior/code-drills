@@ -6,30 +6,24 @@ import {
 import { Sheet } from "@mui/joy";
 
 type BalanceSheetTableProps = {
-  title: string;
-  orgName: string;
-  asOfDateString: string;
-  rows: BalanceSheetRow[];
+  tableRows: BalanceSheetRow[];
 };
 
 export default function BalanceSheetTable({
-  title,
-  orgName,
-  asOfDateString,
-  rows,
+  tableRows,
 }: BalanceSheetTableProps) {
-  const headers = rows.filter(
+  if (tableRows.length === 0) {
+    return <div className="pt-12 text-center text-lg">No data available</div>;
+  }
+  const headers = tableRows.filter(
     (row) => row.RowType === BalanceSheetRowType.Header
   );
-  const sections = rows.filter(
+  const sections = tableRows.filter(
     (row) => row.RowType === BalanceSheetRowType.Section
   );
   const maxColumnSpan = headers[0].Cells.length;
   return (
     <Sheet className="p-2 md:p-4">
-      <h1 className="text-4xl font-bold">{title}</h1>
-      <h2 className="text-2xl">{orgName}</h2>
-      <p className="text-base">As at {asOfDateString}</p>
       <Table
         className="pt-4"
         aria-label="balance sheet table"

@@ -17,27 +17,9 @@ const TEST_DEFAULT_ROWS_WITH_ONLY_HEADER: BalanceSheetRow[] = [
 ];
 
 describe("BalanceSheetTable", () => {
-  describe("headings", () => {
-    it("renders title, orgName, and asOfDateString at the very top", () => {
-      render(
-        <BalanceSheetTable
-          title="testTitle"
-          orgName="Test Organization"
-          asOfDateString="01 January 2024"
-          rows={TEST_DEFAULT_ROWS_WITH_ONLY_HEADER}
-        />
-      );
-
-      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        "testTitle"
-      );
-
-      expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-        "Test Organization"
-      );
-
-      expect(screen.getByText("As at 01 January 2024")).toBeInTheDocument();
-    });
+  it("shows no-data message if tableRows is empty", () => {
+    render(<BalanceSheetTable tableRows={[]} />);
+    expect(screen.getByText("No data available")).toBeInTheDocument();
   });
 
   describe("table content", () => {
@@ -52,14 +34,7 @@ describe("BalanceSheetTable", () => {
           ],
         },
       ];
-      render(
-        <BalanceSheetTable
-          title="testTitle"
-          orgName="Test Organization"
-          asOfDateString="01 January 2024"
-          rows={mockRows}
-        />
-      );
+      render(<BalanceSheetTable tableRows={mockRows} />);
 
       expect(
         screen.getByRole("columnheader", { name: "Test Header 1" })
@@ -81,14 +56,7 @@ describe("BalanceSheetTable", () => {
           Rows: [],
         },
       ];
-      render(
-        <BalanceSheetTable
-          title="testTitle"
-          orgName="Test Organization"
-          asOfDateString="01 January 2024"
-          rows={mockRows}
-        />
-      );
+      render(<BalanceSheetTable tableRows={mockRows} />);
 
       expect(
         screen.getByRole("rowheader", { name: "Test Section" })
@@ -104,14 +72,7 @@ describe("BalanceSheetTable", () => {
           Rows: [],
         },
       ];
-      render(
-        <BalanceSheetTable
-          title="testTitle"
-          orgName="Test Organization"
-          asOfDateString="01 January 2024"
-          rows={mockRows}
-        />
-      );
+      render(<BalanceSheetTable tableRows={mockRows} />);
 
       expect(
         screen.getByRole("rowheader", { name: "Test Section" })
@@ -130,14 +91,7 @@ describe("BalanceSheetTable", () => {
           Rows: [],
         },
       ];
-      render(
-        <BalanceSheetTable
-          title="testTitle"
-          orgName="Test Organization"
-          asOfDateString="01 January 2024"
-          rows={mockRows}
-        />
-      );
+      render(<BalanceSheetTable tableRows={mockRows} />);
 
       expect(
         screen.getByRole("rowheader", { name: "Test Section" })
@@ -156,14 +110,7 @@ describe("BalanceSheetTable", () => {
           Rows: [],
         },
       ];
-      render(
-        <BalanceSheetTable
-          title="testTitle"
-          orgName="Test Organization"
-          asOfDateString="01 January 2024"
-          rows={mockRows}
-        />
-      );
+      render(<BalanceSheetTable tableRows={mockRows} />);
 
       expect(screen.queryByRole("rowheader")).not.toBeInTheDocument();
     });
@@ -183,14 +130,7 @@ describe("BalanceSheetTable", () => {
         },
       ];
 
-      render(
-        <BalanceSheetTable
-          title="testTitle"
-          orgName="Test Organization"
-          asOfDateString="01 January 2024"
-          rows={mockRows}
-        />
-      );
+      render(<BalanceSheetTable tableRows={mockRows} />);
 
       expect(
         screen.getByRole("cell", { name: "Test Row 1" })
@@ -215,14 +155,7 @@ describe("BalanceSheetTable", () => {
         },
       ];
 
-      render(
-        <BalanceSheetTable
-          title="testTitle"
-          orgName="Test Organization"
-          asOfDateString="01 January 2024"
-          rows={mockRows}
-        />
-      );
+      render(<BalanceSheetTable tableRows={mockRows} />);
 
       expect(screen.getByTitle("table-Test Section-row-0")).toHaveClass(
         "bg-neutral-800 underline"
