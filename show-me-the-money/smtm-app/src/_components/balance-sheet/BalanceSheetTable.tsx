@@ -34,15 +34,18 @@ export default function BalanceSheetTable({
             {headers.map((header, index) => (
               <tr key={index}>
                 {header.Cells.map((cell) => (
-                  <th key={cell.Value}>{cell.Value}</th>
+                  <th key={`header-${index}-${cell.Value}`}>{cell.Value}</th>
                 ))}
               </tr>
             ))}
           </thead>
         )}
-        {sections.map((section) => {
+        {sections.map((section, sectionIndex) => {
           return (
-            <tbody key={section.Title} id={section.Title}>
+            <tbody
+              key={`table-section-${sectionIndex}-${section.Title}`}
+              id={section.Title}
+            >
               {section.Title && (
                 <tr className="h-16">
                   <th
@@ -68,8 +71,12 @@ export default function BalanceSheetTable({
                       : ""
                   }
                 >
-                  {row.Cells.map((cell) => (
-                    <td key={cell.Value}>{cell.Value}</td>
+                  {row.Cells.map((cell, cellIndex) => (
+                    <td
+                      key={`table-${section.Title}-row-${index}-cell-${cellIndex}`}
+                    >
+                      {cell.Value}
+                    </td>
                   ))}
                 </tr>
               ))}
