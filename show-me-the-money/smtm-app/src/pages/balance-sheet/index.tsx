@@ -46,7 +46,6 @@ export default function BalanceSheetPage({
   const [reportNumPeriods, setReportNumPeriods] = useState<string>("1");
 
   const handleReportDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("reportDate", e.target.value);
     setReportDate(dayjs(e.target.value).format("YYYY-MM-DD"));
   };
 
@@ -54,7 +53,6 @@ export default function BalanceSheetPage({
     _: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
     value: ReportTimeframe | null
   ) => {
-    console.log("reportTimeframe", value);
     if (value) {
       setReportTimeframe(value);
     }
@@ -64,7 +62,6 @@ export default function BalanceSheetPage({
     _: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
     value: string | null
   ) => {
-    console.log("reportNumPeriods", value);
     if (value) {
       setReportNumPeriods(value);
     }
@@ -93,7 +90,7 @@ export default function BalanceSheetPage({
         />
         <Select
           sx={{ minWidth: 200 }}
-          placeholder="Timeframe"
+          defaultValue={reportTimeframe}
           value={reportTimeframe}
           onChange={handleReportTimeframeChange}
         >
@@ -103,7 +100,7 @@ export default function BalanceSheetPage({
         </Select>
         <Select
           sx={{ minWidth: 200 }}
-          placeholder="Number of periods"
+          defaultValue={reportNumPeriods}
           value={reportNumPeriods}
           onChange={handleReportNumPeriodsChange}
         >
