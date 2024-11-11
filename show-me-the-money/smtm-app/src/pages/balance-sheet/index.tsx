@@ -73,6 +73,7 @@ export default function BalanceSheetPage({
               name="date"
               defaultValue={reportDate}
               onChange={handleReportDateChange}
+              max={dayjs().format("YYYY-MM-DD")}
             />
             <Select
               sx={{ minWidth: 200 }}
