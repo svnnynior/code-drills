@@ -1,10 +1,8 @@
 import { Router } from "express";
+import * as balanceSheetController from "./controller";
 
 const router = Router();
 
-router.get("/", (req, res, next) => {
-  res.send("Hello Balance Sheet");
-  next();
-});
+router.get("/", balanceSheetController.get);
 
 export default router;
