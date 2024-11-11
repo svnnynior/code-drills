@@ -1,23 +1,10 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import React, { useState } from "react";
-import { getBalanceSheetData } from "./server";
+import { BalanceSheetTableData, getBalanceSheetData } from "./server";
 import BalanceSheetTable from "@/_components/balance-sheet/BalanceSheetTable";
 import Link from "next/link";
 import { Option, Select } from "@mui/joy";
 import dayjs from "dayjs";
-
-// TODO: Backend should change Reports to not be an array
-export type BalanceSheetTableData = {
-  Reports: {
-    ReportID: string;
-    ReportName: string;
-    ReportType: string;
-    ReportTitles: [string, string, string];
-    ReportDate: string;
-    UpdatedDateUTC: string;
-    Rows: [];
-  }[];
-};
 
 enum ReportTimeframe {
   MONTH = "MONTH",
@@ -27,15 +14,15 @@ enum ReportTimeframe {
 
 export const getServerSideProps = (async () => {
   const data = await getBalanceSheetData();
-  return { props: { data } };
+  return { props: { data: data.report } };
 }) satisfies GetServerSideProps<{ data: BalanceSheetTableData }>;
 
 export default function BalanceSheetPage({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const title = data.Reports[0].ReportTitles[0];
-  const orgName = data.Reports[0].ReportTitles[1];
-  const asOfDateString = data.Reports[0].ReportDate;
+  const title = data.ReportTitles[0];
+  const orgName = data.ReportTitles[1];
+  const asOfDateString = data.ReportDate;
 
   const [reportDate, setReportDate] = useState<string>(
     dayjs().format("YYYY-MM-DD")
@@ -122,7 +109,7 @@ export default function BalanceSheetPage({
           Data last updated on {asOfDateString}
         </span>
       </div>
-      <BalanceSheetTable tableRows={data.Reports[0].Rows} />
+      <BalanceSheetTable tableRows={data.Rows} />
     </main>
   );
 }
