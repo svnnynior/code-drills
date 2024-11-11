@@ -14,11 +14,6 @@ enum ReportTimeframe {
 
 type Props = { reportData: BalanceSheetTableData };
 
-export const getServerSideProps = (async () => {
-  const data = await getBalanceSheetData();
-  return { props: { reportData: data.report ?? null } };
-}) satisfies GetServerSideProps<Props>;
-
 export default function BalanceSheetPage({
   reportData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -124,3 +119,8 @@ export default function BalanceSheetPage({
     </main>
   );
 }
+
+export const getServerSideProps = (async () => {
+  const data = await getBalanceSheetData();
+  return { props: { reportData: data.report ?? null } };
+}) satisfies GetServerSideProps<Props>;

@@ -28,8 +28,8 @@ It is developed using Next.js (v14 - Page Router), Typescript, and MUI/Joy.
 docker run -d -p 3000:3000 jaypeng2015/show-me-the-money:latest
 ```
 
-2. Navigate to `smtm-backend` directory
-3. The mock Xero API will be available at `http://localhost:3000/api.xro/2.0/Reports/BalanceSheet`
+2. The mock Xero API will be available at `http://localhost:3000/api.xro/2.0/Reports/BalanceSheet`
+3. Navigate to `smtm-backend` directory
 4. Run `pnpm install` in the `smtm-backend` directory to install the dependencies
 5. Run `pnpm run dev` in the `smtm-backend` directory to start the backend server
 6. The backend server will be available at `http://localhost:3001/api/balance-sheet`
