@@ -4,3 +4,19 @@ services:
     container_name: xero-api
     ports:
       - 3000:3000
+    networks:
+      - smtm-network
+  smtm-backend:
+    build: ./smtm-backend
+    container_name: smtm-backend
+    ports:
+      - "3001:3001"
+    restart: always
+    networks:
+      - smtm-network
+    environment:
+      - XERO_API_BASE_URL=http://xero-api:3000
+
+networks:
+  smtm-network:
+    driver: bridge
