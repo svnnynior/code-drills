@@ -2,11 +2,18 @@ import express, { Express, Request, Response } from "express";
 import balanceSheetRouter from "./balance-sheet/route";
 import dotenv from "dotenv";
 import { XERO_API_BASE_URL } from "./shared/config";
+import cors from "cors";
 
 const app: Express = express();
 const port = 3001;
 
 dotenv.config();
+
+app.use(
+  cors({
+    origin: "http://localhost:8000",
+  })
+);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello Express + TypeScript Server");
