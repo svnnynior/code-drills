@@ -10,8 +10,8 @@ export type BalanceSheetTableData = {
   Rows: [];
 };
 
-type BalanceSheetTableResponse = {
-  report: BalanceSheetTableData;
+export type BalanceSheetTableResponse = {
+  report: BalanceSheetTableData | null;
 };
 
 export const getBalanceSheetData = async ({
@@ -19,15 +19,15 @@ export const getBalanceSheetData = async ({
   periods,
   timeframe,
 }: {
-  date?: string;
-  periods?: string;
-  timeframe?: string;
+  date?: string | null;
+  periods?: string | null;
+  timeframe?: string | null;
 } = {}): Promise<BalanceSheetTableResponse> => {
   const params = new URLSearchParams();
 
   if (date) params.append("date", date);
   if (periods) params.append("periods", periods);
-  if (timeframe) params.append("timeframe", timeframe);
+  if (timeframe) params.append("timeframe", timeframe.toUpperCase());
 
   const queryString = params.toString();
   const res = await fetch(
@@ -35,6 +35,6 @@ export const getBalanceSheetData = async ({
       queryString ? `?${queryString}` : ""
     }`
   );
-  const data: any = await res.json();
+  const data = await res.json();
   return data;
 };

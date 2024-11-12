@@ -1,10 +1,12 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import React, { useState } from "react";
-import { BalanceSheetTableData, getBalanceSheetData } from "./server";
+import { BalanceSheetTableResponse, getBalanceSheetData } from "./server";
 import BalanceSheetTable from "@/_components/balance-sheet/BalanceSheetTable";
 import Link from "next/link";
 import { Option, Select } from "@mui/joy";
 import dayjs from "dayjs";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
 enum ReportTimeframe {
   MONTH = "MONTH",
@@ -12,22 +14,64 @@ enum ReportTimeframe {
   YEAR = "YEAR",
 }
 
-type Props = { reportData: BalanceSheetTableData };
+const formatDateFromQuery = (dateQuery: string | null): string | null => {
+  return dateQuery ? dayjs(dateQuery).format("YYYY-MM-DD") : null;
+};
+
+const formatTimeframeFromQuery = (
+  timeframeQuery: string | null
+): ReportTimeframe | null => {
+  if (timeframeQuery?.toUpperCase() === ReportTimeframe.MONTH.toString()) {
+    return ReportTimeframe.MONTH;
+  }
+  if (timeframeQuery?.toUpperCase() === ReportTimeframe.QUARTER.toString()) {
+    return ReportTimeframe.QUARTER;
+  }
+  if (timeframeQuery?.toUpperCase() === ReportTimeframe.YEAR.toString()) {
+    return ReportTimeframe.YEAR;
+  }
+  return null;
+};
+
+type Props = { reportData: BalanceSheetTableResponse };
+
+export const getServerSideProps = (async (req) => {
+  const data = await getBalanceSheetData(req.query);
+  return { props: { reportData: data } };
+}) satisfies GetServerSideProps<Props>;
 
 export default function BalanceSheetPage({
   reportData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const title = reportData?.ReportTitles[0];
-  const orgName = reportData?.ReportTitles[1];
-  const asOfDateString = reportData?.ReportDate;
+  const searchParams = useSearchParams();
+  const dateQuery = searchParams.get("date");
+  const periodsQuery = searchParams.get("periods");
+  const timeframeQuery = searchParams.get("timeframe");
+
+  const { data } = useQuery({
+    queryKey: ["balance-sheet"],
+    queryFn: () =>
+      getBalanceSheetData({
+        date: dateQuery,
+        periods: periodsQuery,
+        timeframe: timeframeQuery,
+      }),
+    initialData: reportData,
+  });
+
+  const title = data.report?.ReportTitles[0];
+  const orgName = data.report?.ReportTitles[1];
+  const asOfDateString = data.report?.ReportDate;
 
   const [reportDate, setReportDate] = useState<string>(
-    dayjs().format("YYYY-MM-DD")
+    formatDateFromQuery(dateQuery) || dayjs().format("YYYY-MM-DD")
   );
   const [reportTimeframe, setReportTimeframe] = useState<ReportTimeframe>(
-    ReportTimeframe.MONTH
+    formatTimeframeFromQuery(timeframeQuery) || ReportTimeframe.MONTH
   );
-  const [reportNumPeriods, setReportNumPeriods] = useState<string>("1");
+  const [reportNumPeriods, setReportNumPeriods] = useState<string>(
+    periodsQuery || "1"
+  );
 
   const handleReportDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReportDate(dayjs(e.target.value).format("YYYY-MM-DD"));
@@ -61,7 +105,7 @@ export default function BalanceSheetPage({
           <Link href="/">&larr; Back to Home</Link>
         </span>
       </div>
-      {reportData ? (
+      {data.report ? (
         <>
           <h1 className="text-4xl font-bold">{title}</h1>
           <h2 className="text-2xl">{orgName}</h2>
@@ -109,7 +153,7 @@ export default function BalanceSheetPage({
               Data last updated on {asOfDateString}
             </span>
           </div>
-          <BalanceSheetTable tableRows={reportData.Rows} />
+          <BalanceSheetTable tableRows={data.report.Rows} />
         </>
       ) : (
         <div className="pt-20 text-center text-xl">
@@ -120,8 +164,3 @@ export default function BalanceSheetPage({
     </main>
   );
 }
-
-export const getServerSideProps = (async () => {
-  const data = await getBalanceSheetData();
-  return { props: { reportData: data.report ?? null } };
-}) satisfies GetServerSideProps<Props>;
