@@ -1,5 +1,8 @@
 # Show Me The Money
 
+[!NOTE]
+For the instructions on how to run the project, please read [DEVELOPMENT.md](./DEVELOPMENT.md).
+
 The goal of the project is to build a simple one page application to display the Balance Sheet Report from [Xero](https://www.xero.com/au/).
 
 Please read through the API documentation at https://developer.xero.com/documentation/api/accounting/reports#balance-sheet.
